@@ -1,4 +1,4 @@
-package soeki.plugins
+package plugins
 
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.*

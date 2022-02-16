@@ -1,4 +1,4 @@
-package soeki.plugins
+package plugins
 
 import io.ktor.server.routing.*
 import io.ktor.http.*

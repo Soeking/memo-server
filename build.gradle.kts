@@ -8,10 +8,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
 }
 
-group = "soeki"
 version = "0.0.1"
 application {
-    mainClass.set("soeki.ApplicationKt")
+    mainClass.set("ApplicationKt")
 }
 
 repositories {
