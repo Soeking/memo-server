@@ -5,7 +5,9 @@ import plugins.configureSecurity
 import plugins.configureSerialization
 
 fun main() {
-    embeddedServer(Netty, port = System.getenv("PORT").toInt(), host = "0.0.0.0") {
+    val port = System.getenv("PORT").toIntOrNull() ?: 8080
+    val host = "0.0.0.0"
+    embeddedServer(Netty, port, host) {
         configureRouting()
         configureSerialization()
         configureSecurity()
