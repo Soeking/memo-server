@@ -32,6 +32,12 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-jdbc", "0.37.3")
 }
 
+tasks {
+    build {
+        mustRunAfter("clean")
+    }
+}
+
 val jar by tasks.getting(Jar::class) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
