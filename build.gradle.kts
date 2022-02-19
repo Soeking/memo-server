@@ -32,6 +32,18 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-jdbc", "0.37.3")
 }
 
+val jar by tasks.getting(Jar::class) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Main-Class"] = "ApplicationKt"
+    }
+
+    from(configurations.compileClasspath.get().map {
+        if (it.isDirectory) it else zipTree(it)
+    })
+    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
+}
+
 tasks.register("stage") {
     dependsOn("build", "clean")
 }
