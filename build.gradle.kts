@@ -10,7 +10,7 @@ plugins {
 
 version = "0.0.1"
 application {
-    mainClass.set("ApplicationKt")
+    mainClass.set("MainKt")
 }
 
 repositories {
@@ -41,7 +41,7 @@ tasks {
 val jar by tasks.getting(Jar::class) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
-        attributes["Main-Class"] = "ApplicationKt"
+        attributes["Main-Class"] = "MainKt"
     }
 
     from(configurations.compileClasspath.get().map {
