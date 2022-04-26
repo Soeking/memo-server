@@ -1,9 +1,7 @@
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import plugins.configureRouting
-import plugins.configureSecurity
-import plugins.configureSerialization
+import plugins.*
 
 fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 8081
@@ -12,7 +10,9 @@ fun main() {
 }
 
 fun Application.main() {
+    firstCheck()
     configureRouting()
     configureSerialization()
     configureSecurity()
+    configureLogin()
 }

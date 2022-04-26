@@ -1,6 +1,20 @@
 package plugins
 
+import io.ktor.server.application.*
+import io.ktor.server.routing.*
 import java.security.MessageDigest
+
+fun Application.configureLogin(){
+    routing {
+        get("/login"){
+            login()
+        }
+
+        get("/create"){
+            createAccount()
+        }
+    }
+}
 
 fun createAccount(){
 
