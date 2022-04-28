@@ -28,7 +28,8 @@ fun firstCheck() {
     }
 }
 
-fun addUser(addName: String, addPass: String) {
+fun addUser(addName: String, addPass: String): Boolean {
+    User.select { User.name eq addName }.firstOrNull()?.let { return false }
     transaction {
         User.insert {
             it[name] = addName
@@ -36,6 +37,7 @@ fun addUser(addName: String, addPass: String) {
             it[version] = 0
         }
     }
+    return true
 }
 
 fun addData(userName: String, dataType: String, data: String) {
@@ -50,4 +52,13 @@ fun addData(userName: String, dataType: String, data: String) {
             }
         }
     }
+}
+
+fun loginCheck(user: String, pass: String): Boolean {
+    val correct = User.slice(User.pass).select { User.name eq user }.firstOrNull()?.let { it[User.pass] }
+    return correct == pass
+}
+
+fun readUsers(): List<String> {
+    return User.slice(User.name).selectAll().map { it[User.name] }
 }
