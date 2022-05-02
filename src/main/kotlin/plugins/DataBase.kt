@@ -41,8 +41,8 @@ fun addUser(addName: String, addPass: String): Boolean {
     return true
 }
 
-fun addData(userName: String, dataType: String, data: String) {
-    transaction {
+fun addData(userName: String, dataType: String, data: String): Int {
+    return transaction {
         val (id, ver) = Users.slice(Users.id, Users.version).select { Users.name eq userName }.first()
             .let { it[Users.id] to it[Users.version] }
         Data.insert {
@@ -60,6 +60,8 @@ fun addData(userName: String, dataType: String, data: String) {
                 it.update(Users.version, Users.version + 1)
             }
         }
+
+        ver
     }
 }
 
@@ -75,4 +77,19 @@ fun readUsers(): List<String> {
         query.forEach { users.add(it[Users.name]) }
     }
     return users
+}
+
+fun getData(userName: String, versionId: Int): List<Pair<String, String>> {
+    val dataList = mutableListOf<Pair<String, String>>()
+    transaction {
+        val id = Users.slice(Users.id).select { Users.name eq userName }.first()[Users.id]
+        Data.slice(Data.type, Data.text, Data.image).select { (Data.userId eq id) and (Data.version greater versionId) }
+            .forEach {
+                when (it[Data.type]) {
+                    "text" -> dataList.add(it[Data.type] to (it[Data.text] ?: ""))
+                    "image" -> dataList.add(it[Data.type] to (it[Data.image] ?: ""))
+                }
+            }
+    }
+    return dataList
 }

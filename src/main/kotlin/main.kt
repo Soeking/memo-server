@@ -14,4 +14,5 @@ fun Application.main() {
     initLoginInfo()
     configureRouting()
     configureLogin()
+    configureSend()
 }
