@@ -12,6 +12,7 @@ object User : Table() {
 
 object Data : Table() {
     val userId: Column<Int> = integer("user_id")
+    val version: Column<Int> = integer("version")
     val type: Column<String> = varchar("type", 10)
     val text: Column<String?> = varchar("text", 200).nullable()
     val image: Column<String?> = varchar("image", 50).nullable()
@@ -42,13 +43,21 @@ fun addUser(addName: String, addPass: String): Boolean {
 
 fun addData(userName: String, dataType: String, data: String) {
     transaction {
-        val id = User.slice(User.id).select { User.name eq userName }.first()[User.id]
+        val (id, ver) = User.slice(User.id, User.version).select { User.name eq userName }.first()
+            .let { it[User.id] to it[User.version] }
         Data.insert {
             it[userId] = id
+            it[version] = ver + 1
             it[type] = dataType
             when (dataType) {
                 "text" -> it[text] = data
                 "image" -> it[image] = data
+            }
+        }
+
+        User.update({ User.id eq id }) {
+            with(SqlExpressionBuilder) {
+                it.update(User.version, User.version + 1)
             }
         }
     }
@@ -60,5 +69,10 @@ fun loginCheck(user: String, pass: String): Boolean {
 }
 
 fun readUsers(): List<String> {
-    return User.slice(User.name).selectAll().map { it[User.name] }
+    val users = mutableListOf<String>()
+    transaction {
+        val query = User.slice(User.name).selectAll()
+        query.forEach { users.add(it[User.name]) }
+    }
+    return users
 }

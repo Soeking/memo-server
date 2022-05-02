@@ -6,7 +6,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.security.MessageDigest
 
-val isLogin = mutableListOf<Pair<String, Boolean>>()
+val isLogin = mutableMapOf<String, Boolean>()
 
 fun Application.configureLogin() {
     routing {
@@ -24,21 +24,20 @@ fun Application.configureLogin() {
 
 fun initLoginInfo() {
     readUsers().forEach {
-        isLogin.add(Pair(it, false))
+        isLogin + (it to false)
     }
 }
 
 fun createAccount(user: String, pass: String): Boolean {
     return if (addUser(user, sha256(pass))) {
-        isLogin.add(Pair(user, true))
+        isLogin + (user to true)
         true
     } else false
 }
 
 fun login(user: String, pass: String): String {
-    val res = loginCheck(user, sha256(pass))
-    return if (res) {
-        isLogin.add(Pair(user, true))
+    return if (loginCheck(user, sha256(pass))) {
+        isLogin[user] = true
         "connected"
     } else "login failed"
 }

@@ -13,7 +13,5 @@ fun Application.main() {
     firstCheck()
     initLoginInfo()
     configureRouting()
-    configureSerialization()
-    configureSecurity()
     configureLogin()
 }
