@@ -15,4 +15,5 @@ fun Application.main() {
     configureRouting()
     configureLogin()
     configureSend()
+    configureReceive()
 }
