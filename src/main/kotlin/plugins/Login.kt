@@ -11,13 +11,13 @@ val isLogin = mutableMapOf<String, Boolean>()
 fun Application.configureLogin() {
     routing {
         post("/login") {
-            val rec = call.receive<Pair<String, String>>()
-            login(rec.first, rec.second).let { call.respondText(it) }
+            val rec = call.receiveParameters()
+            login(rec["user"].toString(), rec["pass"].toString()).let { call.respondText(it) }
         }
 
         post("/create") {
-            val rec = call.receive<Pair<String, String>>()
-            createAccount(rec.first, rec.second).let { call.respond(it) }
+            val rec = call.receiveParameters()
+            createAccount(rec["user"].toString(), rec["pass"].toString()).let { call.respond(it) }
         }
     }
 }
