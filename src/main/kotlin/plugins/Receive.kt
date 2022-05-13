@@ -8,8 +8,8 @@ import io.ktor.server.routing.*
 fun Application.configureReceive() {
     routing {
         post("/addNew") {
-            val rec = call.receive<Triple<String, String, String>>()
-            addNewData(rec.first, rec.second, rec.third).let { call.respond(it) }
+            val rec = call.receiveParameters()
+            addNewData(rec["user"].toString(), rec["type"].toString(), rec["data"].toString()).let { call.respond(it) }
         }
     }
 }

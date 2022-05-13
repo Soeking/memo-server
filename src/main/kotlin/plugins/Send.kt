@@ -2,17 +2,17 @@ package plugins
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.Serializable
 
 fun Application.configureSend() {
     routing {
         get("/getData") {
-            val param = call.request.queryParameters
-            sendNewData(param).run {
-                forEach {
-                    call.respondText(it.first + it.second)
-                }
+            val param = call.receiveParameters()
+            sendNewData(param).let {
+                call.respond(NewData(it))
             }
         }
     }
@@ -25,3 +25,6 @@ fun sendNewData(param: Parameters): List<Pair<String, String>> {
     return if (isLogin[name] == true) getData(name, version)
     else emptyList()
 }
+
+@Serializable
+data class NewData(val data: List<Pair<String, String>>)

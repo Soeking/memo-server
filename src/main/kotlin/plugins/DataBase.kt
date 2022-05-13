@@ -15,7 +15,7 @@ object Data : Table() {
     val version: Column<Int> = integer("version")
     val type: Column<String> = varchar("type", 10)
     val text: Column<String?> = varchar("text", 200).nullable()
-    val image: Column<String?> = varchar("image", 50).nullable()
+    val image: Column<String?> = varchar("image", 100).nullable()
 }
 
 fun firstCheck() {
@@ -92,4 +92,10 @@ fun getData(userName: String, versionId: Int): List<Pair<String, String>> {
             }
     }
     return dataList
+}
+
+fun getVersion(userName: String): Int {
+    return transaction {
+        Users.slice(Users.version).select { Users.name eq userName }.first()[Users.version]
+    }
 }
