@@ -30,15 +30,16 @@ fun firstCheck() {
 }
 
 fun addUser(addName: String, addPass: String): Boolean {
-    Users.select { Users.name eq addName }.firstOrNull()?.let { return false }
-    transaction {
-        Users.insert {
-            it[name] = addName
-            it[pass] = addPass
-            it[version] = 0
-        }
+    return transaction {
+        if (Users.select { Users.name eq addName }.firstOrNull() == null) {
+            Users.insert {
+                it[name] = addName
+                it[pass] = addPass
+                it[version] = 0
+            }
+            true
+        } else false
     }
-    return true
 }
 
 fun addData(userName: String, dataType: String, data: String): Int {
@@ -66,7 +67,9 @@ fun addData(userName: String, dataType: String, data: String): Int {
 }
 
 fun loginCheck(user: String, pass: String): Boolean {
-    val correct = Users.slice(Users.pass).select { Users.name eq user }.firstOrNull()?.let { it[Users.pass] }
+    val correct = transaction {
+        Users.slice(Users.pass).select { Users.name eq user }.firstOrNull()?.let { it[Users.pass] }
+    }
     return correct == pass
 }
 

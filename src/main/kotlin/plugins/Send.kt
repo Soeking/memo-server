@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 
 fun Application.configureSend() {
     routing {
-        get("/getData") {
+        post("/getData") {
             val param = call.receiveParameters()
             sendNewData(param).let {
                 call.respond(NewData(it))
