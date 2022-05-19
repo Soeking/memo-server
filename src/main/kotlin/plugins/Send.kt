@@ -12,7 +12,7 @@ fun Application.configureSend() {
         post("/getData") {
             val param = call.receiveParameters()
             sendNewData(param).let {
-                call.respond(NewData(it))
+                call.respond(NewData(it, getVersion(param["user"].toString())))
             }
         }
     }
@@ -27,4 +27,4 @@ fun sendNewData(param: Parameters): List<Pair<String, String>> {
 }
 
 @Serializable
-data class NewData(val data: List<Pair<String, String>>)
+data class NewData(val data: List<Pair<String, String>>, val version: Int)

@@ -10,6 +10,9 @@ fun Application.configureRouting() {
         get("/") {
             call.respondText("connected")
         }
+        get("/test"){
+            call.respondText("test connect")
+        }
         post("/demo") {
             println("demo")
             val rec = call.receiveParameters()
