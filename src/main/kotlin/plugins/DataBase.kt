@@ -102,3 +102,10 @@ fun getVersion(userName: String): Int {
         Users.slice(Users.version).select { Users.name eq userName }.first()[Users.version]
     }
 }
+
+fun deleteData(userName: String, target: Int) {
+    transaction {
+        val id = Users.slice(Users.id).select { Users.name eq userName }.first()[Users.id]
+        Data.deleteWhere { (Data.userId eq id) and (Data.version eq target) }
+    }
+}
