@@ -8,7 +8,7 @@ import io.ktor.server.response.*
 fun Application.configureRouting() {
     routing {
         get("/") {
-            call.respondText("connected")
+            call.respondText("this is root")
         }
         get("/test"){
             call.respondText("test connect")
