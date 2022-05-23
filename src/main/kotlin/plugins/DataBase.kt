@@ -62,7 +62,7 @@ fun addData(userName: String, dataType: String, data: String): Int {
             }
         }
 
-        ver
+        ver + 1
     }
 }
 
