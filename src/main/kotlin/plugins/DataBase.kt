@@ -2,6 +2,7 @@ package plugins
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.Date
 
 object Users : Table() {
     val id: Column<Int> = integer("id").autoIncrement()
@@ -82,15 +83,16 @@ fun readUsers(): List<String> {
     return users
 }
 
-fun getData(userName: String, versionId: Int): List<Pair<String, String>> {
-    val dataList = mutableListOf<Pair<String, String>>()
+fun getData(userName: String, versionId: Int): List<Triple<String, String, Int>> {
+    val dataList = mutableListOf<Triple<String, String, Int>>()
     transaction {
         val id = Users.slice(Users.id).select { Users.name eq userName }.first()[Users.id]
-        Data.slice(Data.type, Data.text, Data.image).select { (Data.userId eq id) and (Data.version greater versionId) }
+        Data.slice(Data.type, Data.text, Data.image, Data.version)
+            .select { (Data.userId eq id) and (Data.version greater versionId) }
             .forEach {
                 when (it[Data.type]) {
-                    "text" -> dataList.add(it[Data.type] to (it[Data.text] ?: ""))
-                    "image" -> dataList.add(it[Data.type] to (it[Data.image] ?: ""))
+                    "text" -> dataList.add(Triple(it[Data.type], it[Data.text] ?: "", it[Data.version]))
+                    "image" -> dataList.add(Triple(it[Data.type], it[Data.image] ?: "", it[Data.version]))
                 }
             }
     }

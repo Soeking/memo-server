@@ -18,7 +18,7 @@ fun Application.configureSend() {
     }
 }
 
-fun sendNewData(param: Parameters): List<Pair<String, String>> {
+fun sendNewData(param: Parameters): List<Triple<String, String, Int>> {
     val name = param["user"]
     val version = param["version"]?.toIntOrNull()
     if (name == null || version == null) return emptyList()
@@ -27,4 +27,4 @@ fun sendNewData(param: Parameters): List<Pair<String, String>> {
 }
 
 @Serializable
-data class NewData(val data: List<Pair<String, String>>, val version: Int)
+data class NewData(val data: List<Triple<String, String, Int>>, val version: Int)
